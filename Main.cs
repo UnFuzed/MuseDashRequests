@@ -7,7 +7,7 @@ namespace MuseDashRequests
 {
     public class SongRequests : MelonMod
     {
-        private static TwitchClient twitchClient;
+        private static TwitchClient twitchClient = new TwitchClient();
         private readonly string botUsername = "MDRequests";
         private readonly string oauthToken =  Environment.GetEnvironmentVariable("TwitchAPIKey");
         private readonly string channelName = "unfuzed_";
@@ -16,14 +16,10 @@ namespace MuseDashRequests
 
         public override void OnInitializeMelon()
         {
+            twitchClient = TwitchAPI.Load(botUsername, oauthToken, channelName);
 
-            Console.WriteLine(oauthToken);
 
-            MelonEvents.OnGUI.Subscribe(DrawMenu, 100);   
-
-            ConnectionCredentials credentials = new ConnectionCredentials(botUsername, oauthToken);
-            twitchClient = new TwitchClient();
-            twitchClient.Initialize(credentials, channelName);
+            MelonEvents.OnGUI.Subscribe(DrawMenu, 100);
 
             // Subscribe to chat message events
             twitchClient.OnMessageReceived += (twitchMessage, e) =>
